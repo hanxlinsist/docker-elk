@@ -5,7 +5,7 @@ services:
     build:
       context: ./elasticsearch  # Either a path to a directory containing a Dockerfile, or a url to a git repository
       args:  # Add build arguments, which are environment variables accessible only during the build process
-      ELK_VERSION: $ELK_VERSION # 你在 Dockerfile 中定义的参数（比如 ARG ELK_VERSION）可以访问到这个值
+        ELK_VERSION: $ELK_VERSION # 你在 Dockerfile 中定义的参数（比如 ARG ELK_VERSION）可以访问到这个值
     logging:
       driver: json-file
       options:  
