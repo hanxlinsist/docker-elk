@@ -5,7 +5,7 @@ services:
     build:
       context: ./elasticsearch  # Either a path to a directory containing a Dockerfile, or a url to a git repository
       args:  # Add build arguments, which are environment variables accessible only during the build process
-        ELK_VERSION: $ELK_VERSION # 你在 Dockerfile 中定义的参数（比如 ARG ELK_VERSION）可以访问到这个值
+      ELK_VERSION: $ELK_VERSION # 你在 Dockerfile 中定义的参数（比如 ARG ELK_VERSION）可以访问到这个值
     logging:
       driver: json-file
       options:  
@@ -29,17 +29,17 @@ services:
       discovery.type: single-node
     networks:
       - elk
-
+  
   logstash:
     build:
       context: ./logstash
       args:
         ELK_VERSION: $ELK_VERSION
-   logging:
+    logging:
       driver: json-file
       options:  
-         max-size: "10m"  # 类似于 log4j2，设置日志滚动策略的
-         max-file: "10"
+        max-size: "10m"  # 类似于 log4j2，设置日志滚动策略的
+        max-file: "10"
     volumes:
       # - type: bind
       #   source: ./logstash/config/logstash.yml
@@ -60,13 +60,13 @@ services:
       - elk
     depends_on:   # 参考印象笔记：Docker 网络
       - elasticsearch
-
+      
   kibana:
     build:
       context: ./kibana
       args:
         ELK_VERSION: $ELK_VERSION
-   logging:
+    logging:
       driver: json-file
       options:  
          max-size: "10m"  # 类似于 log4j2，设置日志滚动策略的
@@ -89,4 +89,3 @@ networks:
 
 volumes:
   elasticsearch:
-
