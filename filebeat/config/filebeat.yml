@@ -1,0 +1,49 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /root/logs/wave/wave.log
+  json.keys_under_root: true
+  json.add_error_key: true
+  # multiline.pattern: ^\{\"
+  # multiline.negate: true
+  # multiline.match: after
+  fields:
+    logsource: wave   # 这个 键值对 会被写入到 es 中
+  fields_under_root: true
+
+
+# ======================= Elasticsearch template setting =======================
+setup.ilm.enabled: false    # 禁用 es 的 index lifecycle management，也就是索引的滚动策略，类似于 log4j2 的。如果开启它，将会忽视下面2行的配置. https://www.elastic.co/guide/en/beats/filebeat/current/change-index-name.html
+setup.template.name: "filebeat"
+setup.template.pattern: "filebeat-*"
+setup.template.settings:
+  index.number_of_shards: 1
+  
+  #index.codec: best_compression
+  #_source.enabled: false
+
+
+# ---------------------------- Elasticsearch Output ----------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["localhost:9200"]
+  index: "filebeat-%{+yyyy.MM.dd}"
+  # index: "%{[fields.log_type]}-%{[agent.version]}-%{+yyyy.MM.dd}"
+
+  # Protocol - either `http` (default) or `https`.
+  #protocol: "https"
+
+  # Authentication credentials - either API key or username/password.
+  #api_key: "id:api_key"
+  #username: "elastic"
+  #password: "changeme"
+
+
+# ================================= Processors =================================
+processors:
+  # - decode_json_fields:
+  #     fields: ["timeMillis", "level"]
+  - drop_fields:
+      fields: ["input", "log", "ecs", "agent", "host", "threadId", "threadPriority", "endOfBatch"]
+      ignore_missing: true

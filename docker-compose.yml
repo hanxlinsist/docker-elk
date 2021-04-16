@@ -23,10 +23,10 @@ services:
       - "9200:9200"  #  HOST:CONTAINER
     environment:  # 容器运行时内部的环境变量，如果只指定 key，没有指定 value，它会找宿主机对应环境变量的值，which can be helpful for secret or host-specific values
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      ELASTIC_PASSWORD: changeme
+      # ELASTIC_PASSWORD: changeme
       # Use single node discovery in order to disable production mode and avoid bootstrap checks.
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
-      discovery.type: single-node
+      # discovery.type: single-node
     networks:
       - elk
   
